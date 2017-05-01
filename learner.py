@@ -3,6 +3,7 @@ from collections import Counter
 import re
 
 
+# Trains the model reading files in train set excluding stop words.
 class Learner:
     def __init__(self, alpha):
         self.negative_counts = Counter()
@@ -11,11 +12,10 @@ class Learner:
 
     def learn(self):
         print('learning P(word | class) for each word')
-        regex = r'[a-z]+\b'
+        regex = r'(?!the|a|and|to|of|is|in|s|as|i)([a-z]+)\b'
         texts = file_reader.read_files('train', 'neg')
         self.negative_training_text_count = len(texts)
         for text in texts:
-            # TODO: right now with that regex, it is taking 's'
             self.negative_counts.update(Counter(re.findall(regex, text)))
 
         self.negative_normalizer = sum(self.negative_counts.values()) + len(self.negative_counts) * self.alpha
@@ -24,13 +24,19 @@ class Learner:
         texts = file_reader.read_files('train', 'pos')
         self.positive_training_text_count = len(texts)
         for text in texts:
-            # TODO: right now with that regex, it is taking 's'
             self.positive_counts.update(Counter(re.findall(regex, text)))
 
         self.positive_normalizer = sum(self.positive_counts.values()) + len(self.positive_counts) * self.alpha
 
         self.total_training_text_count = self.negative_training_text_count + self.positive_training_text_count
         print('learning P(word | class="positive") completed')
+
+        # print(self.negative_counts)
+        # print(self.negative_normalizer)
+        # print(self.negative_training_text_count)
+        # print(self.positive_counts)
+        # print(self.positive_normalizer)
+        # print(self.positive_training_text_count)
 
     def get_likelihood_probability(self, word, _class):
         if _class == 'negative':

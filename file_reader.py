@@ -1,6 +1,7 @@
 from os import listdir, chdir, getcwd
 
 
+# Reaches target files in dataset.
 def read_files(purpose, _class):
     root_path = getcwd()
     path = 'data/' + purpose + '/' + _class
@@ -12,5 +13,5 @@ def read_files(purpose, _class):
             with open(file) as f:
                 texts.append(f.read())
 
-    chdir(root_path)  # TODO: necessary ?
+    chdir(root_path)
     return texts
